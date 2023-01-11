@@ -1,10 +1,12 @@
 package com.colt.wardrobe;
 
 import com.colt.wardrobe.client.ClientSetup;
+import com.colt.wardrobe.client.render.ModelLayers;
 import com.colt.wardrobe.gui.WardrobeGui;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -23,7 +25,12 @@ public class Wardrobe {
         modEventBus.addListener(ClientSetup::onClientSetup);
         modEventBus.addListener(ClientSetup::onRegisterKeymappings);
 
+        modEventBus.addListener(this::setupEntityModelLayers);
+
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    private void setupEntityModelLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
+        ModelLayers.register(event);
+    }
 }

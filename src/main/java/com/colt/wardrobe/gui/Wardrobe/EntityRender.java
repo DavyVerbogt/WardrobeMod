@@ -1,5 +1,6 @@
 package com.colt.wardrobe.gui.Wardrobe;
 
+import com.colt.wardrobe.Wardrobe;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,46 +18,41 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class EntityRender {
 
-    public static void renderEntityInInventory(int p_98851_, int p_98852_, int p_98853_, float p_98854_, float p_98855_,
-            LivingEntity p_98856_, boolean flipChar) {
-        float f = (float) Math.atan((double) (p_98854_ / 40.0F));
-        float f1 = (float) Math.atan((double) (p_98855_ / 40.0F));
-        renderEntityInInventoryRaw(p_98851_, p_98852_, p_98853_, f, f1, p_98856_, flipChar);
+    public static void renderEntityInInventory(int entityPosLeft, int entityPosTop, int size, int rotatePlayer,
+            float MouseLookX, float MouseLookY, LivingEntity Player) {
+        float f = (float) Math.atan((double) (MouseLookX / 40.0F));
+        float f1 = (float) Math.atan((double) (MouseLookY / 40.0F));
+        renderEntityInInventoryRaw(entityPosLeft, entityPosTop, size, rotatePlayer, f, f1, Player);
     }
 
-    public static void renderEntityInInventoryRaw(int p_98851_, int p_98852_, int p_98853_, float angleXComponent,
-            float angleYComponent, LivingEntity p_98856_, boolean flipChar) {
+    public static void renderEntityInInventoryRaw(int entityPosLeft, int entityPosTop, int size, int rotatePlayer,
+            float angleXComponent, float angleYComponent, LivingEntity Player) {
         float f = angleXComponent;
         float f1 = angleYComponent;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate((double) p_98851_, (double) p_98852_, 1050.0D);
+        posestack.translate((double) entityPosLeft, (double) entityPosTop, 1050.0D);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         PoseStack posestack1 = new PoseStack();
         posestack1.translate(0.0D, 0.0D, 1000.0D);
-        posestack1.scale((float) p_98853_, (float) p_98853_, (float) p_98853_);
+        posestack1.scale((float) size, (float) size, (float) size);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
         quaternion.mul(quaternion1);
         posestack1.mulPose(quaternion);
-        float f2 = p_98856_.yBodyRot;
-        float f3 = p_98856_.getYRot();
-        float f4 = p_98856_.getXRot();
-        float f5 = p_98856_.yHeadRotO;
-        float f6 = p_98856_.yHeadRot;
-        if (flipChar) {
-            p_98856_.yBodyRot = f * 20.0F;
-            p_98856_.setYRot(f * 40.0F);
+        float f2 = Player.yBodyRot;
+        float f3 = Player.getYRot();
+        float f4 = Player.getXRot();
+        float f5 = Player.yHeadRotO;
+        float f6 = Player.yHeadRot;
 
-        } else {
-        p_98856_.yBodyRot = 180.0F + f * 20.0F;
-        p_98856_.setYRot(180.0F + f * 40.0F);
+        Player.yBodyRot = rotatePlayer + 180 + f * 20.0F;
+        Player.setYRot(rotatePlayer + 180 + f * 40.0F);
 
-        }
-        p_98856_.setXRot(-f1 * 20.0F);
-        p_98856_.yHeadRot = p_98856_.getYRot();
-        p_98856_.yHeadRotO = p_98856_.getYRot();
+        Player.setXRot(-f1 * 20.0F);
+        Player.yHeadRot = Player.getYRot();
+        Player.yHeadRotO = Player.getYRot();
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         quaternion1.conj();
@@ -65,16 +61,16 @@ public class EntityRender {
         MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers()
                 .bufferSource();
         RenderSystem.runAsFancy(() -> {
-            entityrenderdispatcher.render(p_98856_, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, posestack1,
+            entityrenderdispatcher.render(Player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, posestack1,
                     multibuffersource$buffersource, 15728880);
         });
         multibuffersource$buffersource.endBatch();
         entityrenderdispatcher.setRenderShadow(true);
-        p_98856_.yBodyRot = f2;
-        p_98856_.setYRot(f3);
-        p_98856_.setXRot(f4);
-        p_98856_.yHeadRotO = f5;
-        p_98856_.yHeadRot = f6;
+        Player.yBodyRot = f2;
+        Player.setYRot(f3);
+        Player.setXRot(f4);
+        Player.yHeadRotO = f5;
+        Player.yHeadRot = f6;
         posestack.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();

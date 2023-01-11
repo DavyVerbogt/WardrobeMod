@@ -17,7 +17,7 @@ public class WardrobeKeyMapping{
 
             public static final KeyMapping Keyflip = new KeyMapping(
                 "key.coltwardrobe.flip_char",
-                KeyConflictContext.IN_GAME,
+                KeyConflictContext.UNIVERSAL,
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_END,
                 "Wardrobe");
