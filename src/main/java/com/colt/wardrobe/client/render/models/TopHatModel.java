@@ -1,19 +1,18 @@
 package com.colt.wardrobe.client.render.models;
 
-import net.minecraft.client.Minecraft;
+import com.colt.wardrobe.Wardrobe;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-import java.sql.Time;
-import java.util.Timer;
-
 public class TopHatModel extends HumanoidModel {
 	public ModelPart tophat;
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(Wardrobe.MOD_ID, "top_hat"), "main");
 
 	public TopHatModel(ModelPart root) {
 		super(root);
