@@ -1,5 +1,6 @@
 package com.colt.wardrobe.gui;
 
+import com.colt.wardrobe.client.render.layers.TopHatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.colt.wardrobe.gui.Wardrobe.HeaderGui;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,6 +9,7 @@ import lain.mods.cos.impl.ModObjects;
 import lain.mods.cos.impl.client.PlayerRenderHandler;
 import lain.mods.cos.impl.inventory.InventoryCosArmor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

@@ -7,7 +7,6 @@ import com.colt.wardrobe.client.render.layers.Data;
 import com.colt.wardrobe.client.render.layers.LayersOptions;
 import com.colt.wardrobe.client.render.layers.TopHatLayer;
 import com.colt.wardrobe.client.render.models.TopHatModel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -24,6 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ClientStuff {
     private static final HashMap<Player, Data> dataHashMap = new HashMap<>();
@@ -36,7 +36,6 @@ public class ClientStuff {
     @Nullable
     public static LayersOptions LayerChoice(AbstractClientPlayer player)
     {
-        Wardrobe.LOGGER.info( "Wardrobe DataHashMap : " +dataHashMap.get(player));
         return dataHashMap.get(player) != null && dataHashMap.get(player).choice() != null ? dataHashMap.get(player).choice() : null;
     }
 
