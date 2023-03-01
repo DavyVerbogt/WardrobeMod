@@ -17,14 +17,25 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import org.apache.commons.lang3.ObjectUtils;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerModel<T>>{
 
-    private static final ResourceLocation TOP_HAT_TEXTURE = new ResourceLocation(Wardrobe.MOD_ID + "texture/entity/hats/top_hat.png");
+    private static ResourceLocation TopHatTexture;
     public TopHatModel topHatModel;
+    public static boolean TurnTophatOn = false;
+    public static int Red = 10;
+    public static int Green = 10;
+    public static int Blue = 10;
+    public static int RedLayer1 = 255;
+    public static int GreenLayer1 = 255;
+    public static int BlueLayer1 = 255;
 
     public TopHatLayer(RenderLayerParent<T, PlayerModel<T>> renderer, EntityModelSet modelSet)
     {
@@ -32,27 +43,71 @@ public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerM
         this.topHatModel = new TopHatModel(modelSet.bakeLayer(TopHatModel.LAYER_LOCATION));
     }
 
-    @Override
-    protected ResourceLocation getTextureLocation(T entity) {
+    protected ResourceLocation getTextureLocation(T entity, String layer) {
         return switch (LayersConfig.LAYER_CHOICE.get())
                 {
-                    case TOP_HAT -> TOP_HAT_TEXTURE;
+                    case TOP_HAT ->  TopHatTexture = new ResourceLocation(Wardrobe.MOD_ID, "textures/player/hats/tophat/top_hat" + layer +".png");
                 };
     }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-
-        poseStack.pushPose();
-        poseStack.translate(0.0D, 0.0D, 0.125D);
-            this.getParentModel().copyPropertiesTo(this.topHatModel);
-            this.topHatModel.withAnimations(entity);
-            VertexConsumer vertexconsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(TOP_HAT_TEXTURE), false, false);
-            this.topHatModel.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        poseStack.popPose();
-
+        if (TurnTophatOn)
+        {
+            colorRenederer(poseStack,buffer,packedLight,entity,limbSwing,limbSwingAmount,partialTick,ageInTicks,netHeadYaw,headPitch);
+        }
     }
+    public void colorRenederer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+        this.getParentModel().copyPropertiesTo(this.topHatModel);
+
+        // Color Int
+        int color = (Red & 0xff) << 16 | (Green & 0xff) << 8 | (Blue & 0xff);
+        int colorLayer1 = (RedLayer1 & 0xff) << 16 | (GreenLayer1 & 0xff) << 8 | (BlueLayer1 & 0xff);
+
+        //RGB Value layer 1
+        float r = (float)(color >> 16 & 255) / 255.0F;
+        float g = (float)(color >> 8 & 255) / 255.0F;
+        float b = (float)(color & 255) / 255.0F;
+
+        //RGB Value layer 2
+        float r1 = (float)(colorLayer1 >> 16 & 255) / 255.0F;
+        float g1 = (float)(colorLayer1 >> 8 & 255) / 255.0F;
+        float b1 = (float)(colorLayer1 & 255) / 255.0F;
+
+        //Alpha Layer 1
+        float alpha = 1F;
+        //Alpha layer 2
+        float alpha1 = 1F;
+
+        getParentModel().getHead().translateAndRotate(poseStack);
+        poseStack.scale(1.01f,1.01f,1.01f);
+
+        //Setup Animation
+        this.topHatModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTick, netHeadYaw, headPitch);
+
+        //Render Layer 1
+        this.renderModelPerLayer(poseStack, buffer, packedLight, false, topHatModel,entity, r, g, b,alpha, "" );
+        //Render Layer 2
+        this.renderModelPerLayer(poseStack, buffer, packedLight, false, topHatModel,entity, r1, g1, b1, alpha1,"_layer_1");
     }
 
+    private void renderModelPerLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, boolean glint, net.minecraft.client.model.Model  model, Entity entity, float r, float g, float b, Float aplha,@Nullable String textureLayer) {
+        renderModel(poseStack, buffer, packedLight, glint, model, r, g, b, aplha,this.getTextureLocation((T) entity, textureLayer));
+    }
 
+    private void renderModel(PoseStack poseStack, MultiBufferSource buffer, int packedLight, boolean glint, net.minecraft.client.model.Model model, float r, float g, float b,float alpha, ResourceLocation textureLocation) {
+        VertexConsumer vertexconsumer;
+        if (alpha == 1.0f)
+        {
+            vertexconsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(textureLocation), false, glint);
+            Wardrobe.LOGGER.info("There is no alpha in " + textureLocation);
+        }
+        else {
+            vertexconsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.entityTranslucentCull(textureLocation), false, glint);
+            Wardrobe.LOGGER.info("There is "+alpha+ " alpha in " + textureLocation);
+        }
 
+        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, alpha);
+    }
+}

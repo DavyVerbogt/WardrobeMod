@@ -32,6 +32,7 @@ public class WardrobeGui extends Screen {
     private final GuiButton ToggleChestArmor;
     private final GuiButton ToggleLegArmor;
     private final GuiButton ToggleBootArmor;
+    private final GuiButton ToggleTopHat;
     private int RotatePlayer = 0;
 
     protected WardrobeGui() {
@@ -58,12 +59,16 @@ public class WardrobeGui extends Screen {
         ToggleHeadArmor = new GuiButton(0, 20, "Toggle Helmet" , () -> ToggleArmor(3));
         ToggleChestArmor = new GuiButton(0, 30, "Toggle Chestplate" , () -> ToggleArmor(2));
         ToggleLegArmor = new GuiButton(0, 40, "Toggle Leggings" , () -> ToggleArmor(1));
-        ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots" , () -> ToggleCustomArmor());
+        ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots" , () -> ToggleArmor(0));
+        ToggleTopHat = new GuiButton(0, 60, "Toggle Top Hat" , () -> ToggleCustomArmor());
         defaultGui.addChild(ToggleCAR);
         defaultGui.addChild(ToggleHeadArmor);
         defaultGui.addChild(ToggleChestArmor);
         defaultGui.addChild(ToggleLegArmor);
         defaultGui.addChild(ToggleBootArmor);
+        defaultGui.addChild(ToggleTopHat);
+
+
     }
 
     @Override
@@ -95,7 +100,7 @@ public class WardrobeGui extends Screen {
         inv.setSkinArmor(slot, !inv.isSkinArmor(slot));
     }
     private void ToggleCustomArmor() {
-
+TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
         }
 
     @Override

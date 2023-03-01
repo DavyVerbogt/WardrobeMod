@@ -41,7 +41,7 @@ public class ClientStuff {
 
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
-        event.registerLayerDefinition(TopHatModel.LAYER_LOCATION, () ->TopHatModel.createArmorLayer(new CubeDeformation(0.5f)));
+        event.registerLayerDefinition(TopHatModel.LAYER_LOCATION, () ->TopHatModel.createLayer());
     }
 
 
@@ -56,12 +56,6 @@ public class ClientStuff {
             {
                 player.addLayer(new TopHatLayer<>(player, models));
             }
-        }
-
-        LivingEntityRenderer<Mob, PlayerModel<Mob>> CompatibleModModel = event.getRenderer(EntityType.ZOMBIE);
-        if (CompatibleModModel != null)
-        {
-            CompatibleModModel.addLayer(new TopHatLayer<>(CompatibleModModel, models));
         }
     }
     @SubscribeEvent

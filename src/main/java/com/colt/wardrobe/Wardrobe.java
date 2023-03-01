@@ -26,8 +26,8 @@ public class Wardrobe {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(ClientStuff::onClientSetup);
         modEventBus.addListener(ClientStuff::onRegisterKeymappings);
-        modEventBus.addListener(ClientStuff::onRegisterLayers);
         modEventBus.addListener(ClientStuff::onAddLayers);
+        modEventBus.addListener(ClientStuff::onRegisterLayers);
 
         LayersConfig.registerClient();
 

@@ -8,6 +8,6 @@ public class HeaderGui extends GuiElement {
     public HeaderGui(int x, int y, int width, int height) {
         super(x, y, 20, 12);
 
-        this.addChild(new GuiText(x, y, 10, "Wardrobe"));
+        //this.addChild(new GuiText(x, y, 100, "Wardrobe"));
     }
 }
