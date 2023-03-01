@@ -52,6 +52,7 @@ public class GuiSlider extends GuiElement implements Consumer<Integer> {
 return false;
     }
 
+
     private void updateColor() {
         if (!enabled) {
             textElement.setColor(GuiColors.muted);
