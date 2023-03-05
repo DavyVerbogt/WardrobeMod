@@ -1,93 +1,86 @@
 package com.colt.wardrobe.gui.elements;
 
-import com.colt.wardrobe.Wardrobe;
-import net.minecraft.client.Minecraft;
-import se.mickelus.mutil.gui.GuiElement;
-import se.mickelus.mutil.gui.GuiStringOutline;
-import net.minecraft.network.chat.Component;
-import se.mickelus.mutil.gui.impl.GuiColors;
+import com.mojang.blaze3d.vertex.PoseStack;
+import se.mickelus.mutil.gui.*;
 
 
 import java.util.function.Consumer;
-import java.util.Collections;
-import java.util.List;
 
-public class GuiSlider extends GuiElement implements Consumer<Integer> {
-    private final GuiStringOutline textElement;
-    Consumer<Integer> slider;
-    private boolean enabled = true;
-    private Component disabledTooltip;
+public class GuiSlider extends GuiElement {
 
-    public GuiSlider(int x, int y, int width, int height,String text, Consumer<Integer> Slider) {
-        super(x, y, width, height);
-        textElement = new GuiStringOutline(0, (height - 8) / 2, text);
-        addChild(textElement);
+    private final int valueSteps;
+    private int indicatorMax;
+    private final Consumer<Integer> onChange;
+    private final GuiElement currentIndicator;
+    private final GuiElement hoverIndicator;
+    private boolean isDragging = false;
+    private int value = 0;
+
+    public GuiSlider(int x, int y, int width, int valueSteps, Consumer<Integer> onChange) {
+        super(x, y, width, 6);
+
+        addChild(new GuiRect(0, 1, width, 4, 0xffffff).setOpacity(0.3f));
+
+        hoverIndicator = new GuiRect(0, 1, 4, 4, 0xffff33).setOpacity(0.3f);
+        hoverIndicator.setVisible(false);
+        addChild(hoverIndicator);
+
+        currentIndicator = new GuiRect(0, 1, 4, 4, 0xffffff);
+        addChild(currentIndicator);
+
+        this.valueSteps = valueSteps;
+        this.indicatorMax = width - 4;
+
+        this.onChange = onChange;
     }
 
-    public GuiSlider(int x, int y, String text, Consumer<Integer> Slider) {
-        this(x, y, Minecraft.getInstance().font.width(text), 10, text, Slider);
-    }
-
-    public GuiSlider(int x, int y, int width, int height, String text, Consumer<Integer> Slider, Component disabledTooltip) {
-        this(x, y, width, height, text, Slider);
-
-        this.disabledTooltip = disabledTooltip;
-    }
-
-    public void setSlider(Consumer<Integer> slider) {
-        this.slider = slider;
-    }
-
-    public Consumer<Integer> getSlider() {
-        return slider;
+    public void setValue(int value) {
+        this.value = value;
+        currentIndicator.setX(value * indicatorMax / (valueSteps - 1));
     }
 
     @Override
-    public void accept(Integer integer) {
-        Wardrobe.LOGGER.info("Wardrobe Slider Int is: " + integer.toString());
-    }
-
-    public boolean onMouseDown(int x, int y, int slider)
-    {
-return false;
-    }
-
-
-    private void updateColor() {
-        if (!enabled) {
-            textElement.setColor(GuiColors.muted);
-        } else if (hasFocus()) {
-            textElement.setColor(GuiColors.hover);
-        } else {
-            textElement.setColor(GuiColors.normal);
+    public boolean onMouseClick(int x, int y, int button) {
+        if (this.hasFocus()) {
+            isDragging = true;
+            return true;
         }
+        return false;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        updateColor();
+    @Override
+    public void onMouseRelease(int x, int y, int button) {
+        isDragging = false;
     }
 
-    public void setText(String text) {
-        textElement.setString(text);
-        setWidth(Minecraft.getInstance().font.width(text));
+    protected int calculateSegment(int refX, int mouseX) {
+        return Math.round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
     }
 
     @Override
     protected void onFocus() {
-        updateColor();
+        hoverIndicator.setVisible(true);
     }
 
     @Override
     protected void onBlur() {
-        updateColor();
+        hoverIndicator.setVisible(false);
     }
 
     @Override
-    public List<Component> getTooltipLines() {
-        if (!enabled && disabledTooltip != null && hasFocus()) {
-            return Collections.singletonList(disabledTooltip);
+    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+        if (isDragging) {
+            int newSegment = calculateSegment(refX, mouseX);
+            if (newSegment != value) {
+                value = newSegment;
+                onChange.accept(value);
+                currentIndicator.setX(value * indicatorMax / (valueSteps - 1));
+                hoverIndicator.setX(value * indicatorMax / (valueSteps - 1));
+            }
+        } else if (hoverIndicator.isVisible()) {
+            hoverIndicator.setX(calculateSegment(refX, mouseX) * indicatorMax / (valueSteps - 1));
         }
-        return null;
+
+        super.draw(matrixStack, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
     }
 }
