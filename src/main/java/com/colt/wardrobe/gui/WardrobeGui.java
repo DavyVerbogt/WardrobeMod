@@ -3,6 +3,7 @@ package com.colt.wardrobe.gui;
 import com.colt.wardrobe.client.render.layers.TopHatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.colt.wardrobe.gui.Wardrobe.HeaderGui;
+import com.colt.wardrobe.gui.elements.GuiSlider;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import lain.mods.cos.impl.ModObjects;
@@ -68,7 +69,7 @@ public class WardrobeGui extends Screen {
         defaultGui.addChild(ToggleBootArmor);
         defaultGui.addChild(ToggleTopHat);
 
-
+        defaultGui.addChild(new GuiSlider(0, 80, 100, 10, val -> System.out.println("slide val: " + val)));
     }
 
     @Override
@@ -124,6 +125,12 @@ TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
         }
 
         return super.mouseScrolled(mouseX, mouseY, distance);
+    }
+
+    @Override
+    public boolean mouseReleased(double x, double y, int button) {
+        defaultGui.onMouseRelease((int) x, (int) y, button);
+        return super.mouseReleased(x, y, button);
     }
 
     @Override
