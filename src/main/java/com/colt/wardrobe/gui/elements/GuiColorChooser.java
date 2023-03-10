@@ -167,6 +167,7 @@ public class GuiColorChooser extends GuiElement {
                 hoverIndicatorPicker.setY(calculateSegmentY(refY, mouseY) * indicatorMax / (valueSteps - 1));
                 hoverIndicatorPicker.setX(calculateSegmentX(refX, mouseX) * indicatorMax / (valueSteps - 1));
             }
+
             if(isDraggingLum)
             {int newSegmentLuminance = calculateSegmentYLuminosity(refY, mouseY);
                 if (newSegmentLuminance != luminance) {
