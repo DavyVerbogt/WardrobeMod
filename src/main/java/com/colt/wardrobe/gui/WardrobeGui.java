@@ -3,6 +3,7 @@ package com.colt.wardrobe.gui;
 import com.colt.wardrobe.client.render.layers.TopHatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.colt.wardrobe.gui.Wardrobe.HeaderGui;
+import com.colt.wardrobe.gui.elements.GuiColorChooser;
 import com.colt.wardrobe.gui.elements.GuiSlider;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -17,13 +18,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import se.mickelus.mutil.gui.GuiButton;
 import se.mickelus.mutil.gui.GuiElement;
 
+import javax.swing.*;
+import javax.swing.plaf.ColorChooserUI;
+import java.awt.*;
+
 @OnlyIn(Dist.CLIENT)
 public class WardrobeGui extends Screen {
 
     private final GuiElement defaultGui;
     private final HeaderGui header;
     private static WardrobeGui instance = null;
-
     private final GuiElement RotatePlayerScrollArea;
     private final GuiButton ResetPlayerRotation;
     private final GuiButton PageSwitcher;
@@ -34,6 +38,7 @@ public class WardrobeGui extends Screen {
     private final GuiButton ToggleLegArmor;
     private final GuiButton ToggleBootArmor;
     private final GuiButton ToggleTopHat;
+    private final GuiSlider RotateSlider;
     private int RotatePlayer = 0;
 
     protected WardrobeGui() {
@@ -68,8 +73,13 @@ public class WardrobeGui extends Screen {
         defaultGui.addChild(ToggleLegArmor);
         defaultGui.addChild(ToggleBootArmor);
         defaultGui.addChild(ToggleTopHat);
+        defaultGui.addChild(new GuiColorChooser(0,110,100, Color.BLACK.hashCode() ,val->val=val));
 
-        defaultGui.addChild(new GuiSlider(0, 80, 100, 10, val -> System.out.println("slide val: " + val)));
+RotateSlider = new GuiSlider(430, 280, 100, 360,true, val -> RotatePlayer = -180 + val);
+        defaultGui.addChild(RotateSlider);
+        defaultGui.addChild(new GuiSlider(0, 80, 100, 255, val -> TopHatLayer.Red=val));
+        defaultGui.addChild(new GuiSlider(0, 90, 100, 255, val -> TopHatLayer.Green=val));
+        defaultGui.addChild(new GuiSlider(0, 100, 100, 255, val -> TopHatLayer.Blue=val));
     }
 
     @Override
@@ -85,12 +95,13 @@ public class WardrobeGui extends Screen {
         int entityPosTop = (height / 3) * 2;
 
         EntityRender.renderEntityInInventory(entityPosLeft, entityPosTop, 110, RotatePlayer,
-                (float) (entityPosLeft) - mouseX,
+                (float) ((entityPosLeft) - mouseX)/2 ,
                 (float) ((entityPosTop - 120) - mouseY) / 6,
                 this.minecraft.player);
     }
 
     private void ResetRotation() {
+        RotateSlider.currentIndicator.setX(RotateSlider.getWidth()/2);
         RotatePlayer = 0;
     }
     private void ToggleCosmeticArmor() {
@@ -104,6 +115,7 @@ public class WardrobeGui extends Screen {
 TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
         }
 
+
     @Override
     public boolean mouseClicked(double x, double y, int button) {
 
@@ -115,7 +127,7 @@ TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double distance) {
-        if (RotatePlayerScrollArea.hasFocus()) {
+        /*if (RotatePlayerScrollArea.hasFocus()) {
             if (distance > 0)
                 RotatePlayer += 5;
             if (distance < 0)
@@ -123,7 +135,7 @@ TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
 
             return true;
         }
-
+*/
         return super.mouseScrolled(mouseX, mouseY, distance);
     }
 

@@ -98,15 +98,8 @@ public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerM
 
     private void renderModel(PoseStack poseStack, MultiBufferSource buffer, int packedLight, boolean glint, net.minecraft.client.model.Model model, float r, float g, float b,float alpha, ResourceLocation textureLocation) {
         VertexConsumer vertexconsumer;
-        if (alpha == 1.0f)
-        {
+
             vertexconsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(textureLocation), false, glint);
-            Wardrobe.LOGGER.info("There is no alpha in " + textureLocation);
-        }
-        else {
-            vertexconsumer = ItemRenderer.getArmorFoilBuffer(buffer, RenderType.entityTranslucentCull(textureLocation), false, glint);
-            Wardrobe.LOGGER.info("There is "+alpha+ " alpha in " + textureLocation);
-        }
 
         model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, alpha);
     }

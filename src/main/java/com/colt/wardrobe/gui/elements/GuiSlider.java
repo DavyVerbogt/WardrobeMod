@@ -11,10 +11,11 @@ public class GuiSlider extends GuiElement {
     private final int valueSteps;
     private int indicatorMax;
     private final Consumer<Integer> onChange;
-    private final GuiElement currentIndicator;
+    public final GuiElement currentIndicator;
     private final GuiElement hoverIndicator;
     private boolean isDragging = false;
     private int value = 0;
+    private boolean CanGoNegative = false;
 
     public GuiSlider(int x, int y, int width, int valueSteps, Consumer<Integer> onChange) {
         super(x, y, width, 6);
@@ -33,6 +34,28 @@ public class GuiSlider extends GuiElement {
 
         this.onChange = onChange;
     }
+
+    public GuiSlider(int x, int y, int width, int valueSteps,boolean CanGoNegative, Consumer<Integer> onChange) {
+        super(x, y, width, 6);
+
+        addChild(new GuiRect(0, 1, width, 4, 0xffffff).setOpacity(0.3f));
+
+        hoverIndicator = new GuiRect(0, 1, 4, 4, 0xffff33).setOpacity(0.3f);
+        hoverIndicator.setVisible(false);
+        addChild(hoverIndicator);
+
+        currentIndicator = new GuiRect(0, 1, 4, 4, 0xffffff);
+        addChild(currentIndicator);
+
+        currentIndicator.setX(width/2);
+
+        this.valueSteps = valueSteps;
+        this.indicatorMax = width - 4;
+        this.CanGoNegative = CanGoNegative;
+
+        this.onChange = onChange;
+    }
+
 
     public void setValue(int value) {
         this.value = value;
@@ -54,6 +77,9 @@ public class GuiSlider extends GuiElement {
     }
 
     protected int calculateSegment(int refX, int mouseX) {
+        if (CanGoNegative) {
+            return Math.round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
+        }
         return Math.round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
     }
 
