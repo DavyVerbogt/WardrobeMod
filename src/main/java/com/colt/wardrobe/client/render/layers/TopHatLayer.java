@@ -23,6 +23,7 @@ import net.minecraft.world.item.ArmorItem;
 import org.apache.commons.lang3.ObjectUtils;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.Objects;
 
 public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerModel<T>>{
@@ -30,9 +31,7 @@ public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerM
     private static ResourceLocation TopHatTexture;
     public TopHatModel topHatModel;
     public static boolean TurnTophatOn = false;
-    public static int Red = 10;
-    public static int Green = 10;
-    public static int Blue = 10;
+public static int Layer1Color = Color.BLACK.hashCode();
     public static int RedLayer1 = 255;
     public static int GreenLayer1 = 255;
     public static int BlueLayer1 = 255;
@@ -62,13 +61,12 @@ public class TopHatLayer <T extends LivingEntity> extends RenderLayer<T, PlayerM
         this.getParentModel().copyPropertiesTo(this.topHatModel);
 
         // Color Int
-        int color = (Red & 0xff) << 16 | (Green & 0xff) << 8 | (Blue & 0xff);
         int colorLayer1 = (RedLayer1 & 0xff) << 16 | (GreenLayer1 & 0xff) << 8 | (BlueLayer1 & 0xff);
 
         //RGB Value layer 1
-        float r = (float)(color >> 16 & 255) / 255.0F;
-        float g = (float)(color >> 8 & 255) / 255.0F;
-        float b = (float)(color & 255) / 255.0F;
+        float r = (float)(Layer1Color >> 16 & 255) / 255.0F;
+        float g = (float)(Layer1Color >> 8 & 255) / 255.0F;
+        float b = (float)(Layer1Color & 255) / 255.0F;
 
         //RGB Value layer 2
         float r1 = (float)(colorLayer1 >> 16 & 255) / 255.0F;

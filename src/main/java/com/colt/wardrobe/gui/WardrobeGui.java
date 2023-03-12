@@ -67,19 +67,17 @@ public class WardrobeGui extends Screen {
         ToggleLegArmor = new GuiButton(0, 40, "Toggle Leggings" , () -> ToggleArmor(1));
         ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots" , () -> ToggleArmor(0));
         ToggleTopHat = new GuiButton(0, 60, "Toggle Top Hat" , () -> ToggleCustomArmor());
+
         defaultGui.addChild(ToggleCAR);
         defaultGui.addChild(ToggleHeadArmor);
         defaultGui.addChild(ToggleChestArmor);
         defaultGui.addChild(ToggleLegArmor);
         defaultGui.addChild(ToggleBootArmor);
         defaultGui.addChild(ToggleTopHat);
-        defaultGui.addChild(new GuiColorChooser(0,110,100, Color.BLACK.hashCode() ,val->val=val));
+        defaultGui.addChild(new GuiColorChooser(-300,-50,255, Color.BLACK.hashCode() ,val->TopHatLayer.Layer1Color=val));
 
 RotateSlider = new GuiSlider(430, 280, 100, 360,true, val -> RotatePlayer = -180 + val);
         defaultGui.addChild(RotateSlider);
-        defaultGui.addChild(new GuiSlider(0, 80, 100, 255, val -> TopHatLayer.Red=val));
-        defaultGui.addChild(new GuiSlider(0, 90, 100, 255, val -> TopHatLayer.Green=val));
-        defaultGui.addChild(new GuiSlider(0, 100, 100, 255, val -> TopHatLayer.Blue=val));
     }
 
     @Override
