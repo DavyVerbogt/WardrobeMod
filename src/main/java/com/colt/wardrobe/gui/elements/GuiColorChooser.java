@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 
 import static net.minecraft.util.Mth.clamp;
 
-
 public class GuiColorChooser extends GuiElement {
     public static final ResourceLocation ColorPickBaground = new ResourceLocation(Wardrobe.MOD_ID,
             "textures/gui/picker.png");
@@ -46,14 +45,15 @@ public class GuiColorChooser extends GuiElement {
         Color color = new Color(initialColor);
         this.hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
-        PickerBackground = new GuiTexture(0,1,WithAndHieght,WithAndHieght, ColorPickBaground);
+        PickerBackground = new GuiTexture(0, 1, WithAndHieght, WithAndHieght, ColorPickBaground);
         PickerBackground.setColor(Color.BLACK.hashCode());
         Picker = new GuiRect(0, 1, WithAndHieght, WithAndHieght, 0xffffff).setOpacity(0.0f);
 
         SliderBackground = new GuiTexture(WithAndHieght + 10, 0, 8, WithAndHieght, LumSliderBackground);
         LumSlider = new GuiRect(WithAndHieght + 10, 0, 8, WithAndHieght, rgb).setOpacity(0.0f);
 
-        CurrentColor = (GuiRect) new GuiRect(Picker.getWidth()+20, Picker.getHeight()-20, 20, 20,initialColor).setOpacity(1f);
+        CurrentColor = (GuiRect) new GuiRect(Picker.getWidth() + 20, Picker.getHeight() - 20, 20, 20, initialColor)
+                .setOpacity(1f);
 
         addChild(PickerBackground);
         addChild(Picker);
@@ -65,18 +65,17 @@ public class GuiColorChooser extends GuiElement {
         hoverIndicatorPicker = new GuiRect(0, 1, 4, 4, 0xffff33).setOpacity(0.3f);
         hoverIndicatorPicker.setVisible(false);
 
-        hoverIndicatorLum = new GuiRect(WithAndHieght+10, 1, 8, 4, 0xffff33).setOpacity(0.3f);
+        hoverIndicatorLum = new GuiRect(WithAndHieght + 10, 1, 8, 4, 0xffff33).setOpacity(0.3f);
         hoverIndicatorLum.setVisible(false);
 
         addChild(hoverIndicatorPicker);
         addChild(hoverIndicatorLum);
 
         currentIndicatorPicker = new GuiRect(0, 1, 4, 4, 0xffffff);
-        currentIndicatorLum = new GuiRect(WithAndHieght+10, 1, 8, 4, 0xffffff);
+        currentIndicatorLum = new GuiRect(WithAndHieght + 10, 1, 8, 4, 0xffffff);
 
         addChild(currentIndicatorPicker);
         addChild(currentIndicatorLum);
-
 
         this.valueSteps = 255;
         this.indicatorMax = WithAndHieght - 4;
@@ -88,9 +87,9 @@ public class GuiColorChooser extends GuiElement {
     protected void updateColor() {
         this.rgb = (0xFFFFFF & Color.HSBtoRGB(this.hsb[H], this.hsb[S], this.hsb[B]));
         Wardrobe.LOGGER.info("Wardrobe color picker color: " + rgb);
-        //this.txtRed.setText(String.valueOf((this.rgb >> 16) & 0xFF));
-        //this.txtGreen.setText(String.valueOf((this.rgb >> 8) & 0xFF));
-        //this.txtBlue.setText(String.valueOf(this.rgb & 0xFF));
+        // this.txtRed.setText(String.valueOf((this.rgb >> 16) & 0xFF));
+        // this.txtGreen.setText(String.valueOf((this.rgb >> 8) & 0xFF));
+        // this.txtBlue.setText(String.valueOf(this.rgb & 0xFF));
     }
 
     public void setValue(int valueX, int valueY, int luminance) {
@@ -144,9 +143,10 @@ public class GuiColorChooser extends GuiElement {
     }
 
     @Override
-    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
-        int BackgroundColorOnly = Color.HSBtoRGB(hsb[H],hsb[S],1.0f);
-        int BackgroundBrightness = Color.HSBtoRGB(0.0f,0.0f,hsb[B]);
+    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX,
+            int mouseY, float opacity) {
+        int BackgroundColorOnly = Color.HSBtoRGB(hsb[H], hsb[S], 1.0f);
+        int BackgroundBrightness = Color.HSBtoRGB(0.0f, 0.0f, hsb[B]);
 
         CurrentColor.setColor(rgb);
         SliderBackground.setColor(BackgroundColorOnly);
@@ -155,50 +155,47 @@ public class GuiColorChooser extends GuiElement {
             int newSegmentY = calculateSegmentY(refY, mouseY);
             int newSegmentX = calculateSegmentX(refX, mouseX);
 
-
             if (newSegmentY != valueY) {
                 if (newSegmentX != valueX) {
 
-                        valueY = newSegmentY;
-                        valueX = newSegmentX;
+                    valueY = newSegmentY;
+                    valueX = newSegmentX;
 
-                        currentIndicatorPicker.setY(valueY * indicatorMax / (valueSteps - 1));
-                        currentIndicatorPicker.setX(valueX * indicatorMax / (valueSteps - 1));
+                    currentIndicatorPicker.setY(valueY * indicatorMax / (valueSteps - 1));
+                    currentIndicatorPicker.setX(valueX * indicatorMax / (valueSteps - 1));
 
-                        hoverIndicatorPicker.setY(valueY * indicatorMax / (valueSteps - 1));
-                        hoverIndicatorPicker.setX(valueX * indicatorMax / (valueSteps - 1));
+                    hoverIndicatorPicker.setY(valueY * indicatorMax / (valueSteps - 1));
+                    hoverIndicatorPicker.setX(valueX * indicatorMax / (valueSteps - 1));
 
-                    this.hsb[H] = Math.min(Math.max((mouseY - refY - y - 1) / (1f * indicatorMax), 0),1);
-                    this.hsb[S] = Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0),1);
-                    this.updateColor();
-                    onChange.accept(rgb);
-                    }
-
-                }
-            } else if (hoverIndicatorPicker.isVisible()) {
-                hoverIndicatorPicker.setY(calculateSegmentY(refY, mouseY) * indicatorMax / (valueSteps - 1));
-                hoverIndicatorPicker.setX(calculateSegmentX(refX, mouseX) * indicatorMax / (valueSteps - 1));
-            }
-
-            if(isDraggingLum)
-            {int newSegmentLuminance = calculateSegmentYLuminosity(refY, mouseY);
-                if (newSegmentLuminance != luminance) {
-
-                    luminance = newSegmentLuminance;
-                    hoverIndicatorLum.setY(luminance * indicatorMax / (valueSteps - 1));
-                    currentIndicatorLum.setY(luminance * indicatorMax / (valueSteps - 1));
-                    this.hsb[B] = Math.min(Math.max((mouseY - refY - y - 1) / (1f * indicatorMax), 0),1);
-
-
-                    PickerBackground.setColor(BackgroundBrightness);
+                    this.hsb[H] = Math.min(Math.max((mouseY - refY - y - 1) / (1f * indicatorMax), 0), 1);
+                    this.hsb[S] = Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1);
                     this.updateColor();
                     onChange.accept(rgb);
                 }
-            }
-            else if (hoverIndicatorLum.isVisible()) {
-                hoverIndicatorLum.setY(calculateSegmentYLuminosity(refY, mouseY) * indicatorMax / (valueSteps - 1));
-            }
 
-            super.draw(matrixStack, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
+            }
+        } else if (hoverIndicatorPicker.isVisible()) {
+            hoverIndicatorPicker.setY(calculateSegmentY(refY, mouseY) * indicatorMax / (valueSteps - 1));
+            hoverIndicatorPicker.setX(calculateSegmentX(refX, mouseX) * indicatorMax / (valueSteps - 1));
         }
+
+        if (isDraggingLum) {
+            int newSegmentLuminance = calculateSegmentYLuminosity(refY, mouseY);
+            if (newSegmentLuminance != luminance) {
+
+                luminance = newSegmentLuminance;
+                hoverIndicatorLum.setY(luminance * indicatorMax / (valueSteps - 1));
+                currentIndicatorLum.setY(luminance * indicatorMax / (valueSteps - 1));
+                this.hsb[B] = Math.min(Math.max((mouseY - refY - y - 1) / (1f * indicatorMax), 0), 1);
+
+                PickerBackground.setColor(BackgroundBrightness);
+                this.updateColor();
+                onChange.accept(rgb);
+            }
+        } else if (hoverIndicatorLum.isVisible()) {
+            hoverIndicatorLum.setY(calculateSegmentYLuminosity(refY, mouseY) * indicatorMax / (valueSteps - 1));
+        }
+
+        super.draw(matrixStack, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
     }
+}

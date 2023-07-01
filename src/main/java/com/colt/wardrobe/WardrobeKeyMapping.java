@@ -15,13 +15,6 @@ public class WardrobeKeyMapping{
             GLFW.GLFW_KEY_HOME,
             "Wardrobe");
 
-            public static final KeyMapping Keyflip = new KeyMapping(
-                "key.coltwardrobe.flip_char",
-                KeyConflictContext.UNIVERSAL,
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_END,
-                "Wardrobe");
-
     private WardrobeKeyMapping() {
     }
 }

@@ -1,25 +1,25 @@
 package com.colt.wardrobe.gui;
 
-import com.colt.wardrobe.client.render.layers.TopHatLayer;
+import com.colt.wardrobe.client.render.layers.TwoLayerColoribleHatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.colt.wardrobe.gui.Wardrobe.HeaderGui;
 import com.colt.wardrobe.gui.elements.GuiColorChooser;
 import com.colt.wardrobe.gui.elements.GuiSlider;
+import com.colt.wardrobe.gui.elements.ModelButton;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import lain.mods.cos.impl.ModObjects;
 import lain.mods.cos.impl.client.PlayerRenderHandler;
 import lain.mods.cos.impl.inventory.InventoryCosArmor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import se.mickelus.mutil.gui.GuiButton;
 import se.mickelus.mutil.gui.GuiElement;
 
-import javax.swing.*;
-import javax.swing.plaf.ColorChooserUI;
 import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -28,7 +28,7 @@ public class WardrobeGui extends Screen {
     private final GuiElement defaultGui;
     private final HeaderGui header;
     private static WardrobeGui instance = null;
-    private final GuiElement RotatePlayerScrollArea;
+    //private final GuiElement RotatePlayerScrollArea;
     private final GuiButton ResetPlayerRotation;
     private final GuiButton PageSwitcher;
 
@@ -44,14 +44,14 @@ public class WardrobeGui extends Screen {
     protected WardrobeGui() {
         super(Component.translatable("wardrobe:wardrobegui"));
 
-        width = 320;
-        height = 240;
+        width = 460;
+        height = 380;
 
         defaultGui = new GuiElement(0, 0, width, height);
 
-        RotatePlayerScrollArea = new GuiElement(430, -000, 120, 300);
+        //RotatePlayerScrollArea = new GuiElement(430, -000, 120, 300);
         ResetPlayerRotation = new GuiButton(430, 260, "Reset Rotation", () -> ResetRotation());
-        defaultGui.addChild(RotatePlayerScrollArea);
+        //defaultGui.addChild(RotatePlayerScrollArea);
         defaultGui.addChild(ResetPlayerRotation);
 
         header = new HeaderGui(0, 0, height, width);
@@ -62,11 +62,11 @@ public class WardrobeGui extends Screen {
         defaultGui.addChild(PageSwitcher);
 
         ToggleCAR = new GuiButton(0, 10, "Toggle Cosmetic Armor", () -> ToggleCosmeticArmor());
-        ToggleHeadArmor = new GuiButton(0, 20, "Toggle Helmet" , () -> ToggleArmor(3));
-        ToggleChestArmor = new GuiButton(0, 30, "Toggle Chestplate" , () -> ToggleArmor(2));
-        ToggleLegArmor = new GuiButton(0, 40, "Toggle Leggings" , () -> ToggleArmor(1));
-        ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots" , () -> ToggleArmor(0));
-        ToggleTopHat = new GuiButton(0, 60, "Toggle Top Hat" , () -> ToggleCustomArmor());
+        ToggleHeadArmor = new GuiButton(0, 20, "Toggle Helmet", () -> ToggleArmor(3));
+        ToggleChestArmor = new GuiButton(0, 30, "Toggle Chestplate", () -> ToggleArmor(2));
+        ToggleLegArmor = new GuiButton(0, 40, "Toggle Leggings", () -> ToggleArmor(1));
+        ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots", () -> ToggleArmor(0));
+        ToggleTopHat = new GuiButton(0, 60, "Toggle Top Hat", () -> ToggleCustomArmor());
 
         defaultGui.addChild(ToggleCAR);
         defaultGui.addChild(ToggleHeadArmor);
@@ -74,9 +74,12 @@ public class WardrobeGui extends Screen {
         defaultGui.addChild(ToggleLegArmor);
         defaultGui.addChild(ToggleBootArmor);
         defaultGui.addChild(ToggleTopHat);
-        defaultGui.addChild(new GuiColorChooser(-300,-50,255, Color.BLACK.hashCode() ,val->TopHatLayer.Layer1Color=val));
+        defaultGui.addChild(new ModelButton(0, 70, 80, 80, () -> ToggleCustomArmor()));
+        defaultGui.addChild(new ModelButton(110, 70, 80, 80, () -> ToggleCustomArmor()));
+        defaultGui.addChild(new GuiColorChooser(-300, -50, 255, Color.BLACK.hashCode(),
+                val -> TwoLayerColoribleHatLayer.Layer1Color = val));
 
-RotateSlider = new GuiSlider(430, 280, 100, 360,true, val -> RotatePlayer = -180 + val);
+        RotateSlider = new GuiSlider(430, 280, 100, 360, true, val -> RotatePlayer = -180 + val);
         defaultGui.addChild(RotateSlider);
     }
 
@@ -84,35 +87,39 @@ RotateSlider = new GuiSlider(430, 280, 100, 360,true, val -> RotatePlayer = -180
     public void render(PoseStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         renderBackground(matrixStack, 0);
 
-        defaultGui.updateFocusState((int) ( (width - defaultGui.getWidth()) / 2) , (int) ( (height - defaultGui.getHeight()) / 1.5) , mouseX,
+        defaultGui.updateFocusState((width - defaultGui.getWidth()) / 2,
+                (int) ((height - defaultGui.getHeight()) / 1.5), mouseX,
                 mouseY);
-        defaultGui.draw(matrixStack, (int) ((width - defaultGui.getWidth()) / 2) , (int) ((height - defaultGui.getHeight()) / 1.5),
+        defaultGui.draw(matrixStack, (width - defaultGui.getWidth()) / 2,
+                (int) ((height - defaultGui.getHeight()) / 1.5),
                 width, height, mouseX, mouseY, 1);
 
         int entityPosLeft = (width / 4) * 3;
         int entityPosTop = (height / 3) * 2;
 
         EntityRender.renderEntityInInventory(entityPosLeft, entityPosTop, 110, RotatePlayer,
-                (float) ((entityPosLeft) - mouseX)/2 ,
+                (float) ((entityPosLeft) - mouseX) / 2,
                 (float) ((entityPosTop - 120) - mouseY) / 6,
                 this.minecraft.player);
     }
 
     private void ResetRotation() {
-        RotateSlider.currentIndicator.setX(RotateSlider.getWidth()/2);
+        RotateSlider.currentIndicator.setX(RotateSlider.getWidth() / 2);
         RotatePlayer = 0;
     }
+
     private void ToggleCosmeticArmor() {
         PlayerRenderHandler.Disabled = !PlayerRenderHandler.Disabled;
     }
+
     private void ToggleArmor(int slot) {
         InventoryCosArmor inv = ModObjects.invMan.getCosArmorInventoryClient(this.minecraft.player.getUUID());
         inv.setSkinArmor(slot, !inv.isSkinArmor(slot));
     }
-    private void ToggleCustomArmor() {
-TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
-        }
 
+    private void ToggleCustomArmor() {
+        TwoLayerColoribleHatLayer.TurnTophatOn = !TwoLayerColoribleHatLayer.TurnTophatOn;
+    }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
@@ -125,15 +132,16 @@ TopHatLayer.TurnTophatOn = !TopHatLayer.TurnTophatOn;
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double distance) {
-        /*if (RotatePlayerScrollArea.hasFocus()) {
-            if (distance > 0)
-                RotatePlayer += 5;
-            if (distance < 0)
-                RotatePlayer -= 5;
-
-            return true;
-        }
-*/
+        /*
+         * if (RotatePlayerScrollArea.hasFocus()) {
+         * if (distance > 0)
+         * RotatePlayer += 5;
+         * if (distance < 0)
+         * RotatePlayer -= 5;
+         * 
+         * return true;
+         * }
+         */
         return super.mouseScrolled(mouseX, mouseY, distance);
     }
 

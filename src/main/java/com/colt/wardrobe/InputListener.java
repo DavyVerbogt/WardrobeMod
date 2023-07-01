@@ -19,11 +19,6 @@ public class InputListener {
                 Minecraft.getInstance().setScreen(gui);
                 Wardrobe.LOGGER.info(Wardrobe.MOD_ID + " Wardrobe Key has been pressed");
             }
-            if (WardrobeKeyMapping.Keyflip.consumeClick()) {
-                WardrobeGui gui = WardrobeGui.getInstance();
-                //gui.flipChar();
-                Wardrobe.LOGGER.info(Wardrobe.MOD_ID + " Wardrobe Key has been pressed");
-            }
         }
     }
 

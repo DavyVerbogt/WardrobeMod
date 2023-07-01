@@ -1,5 +1,7 @@
 package com.colt.wardrobe.gui.Wardrobe;
 
+import org.lwjgl.opengl.GL11;
+
 import com.colt.wardrobe.Wardrobe;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 
 import net.minecraft.world.entity.LivingEntity;
 
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -74,6 +77,13 @@ public class EntityRender {
         posestack.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
+    }
+
+    public static void scissor(int x, int y, int width, int height) {
+        Minecraft mc = Minecraft.getInstance();
+        int scale = (int) mc.getWindow().getGuiScale();
+        GL11.glScissor(x * scale, mc.getWindow().getScreenHeight() - y * scale - height * scale,
+                Math.max(0, width * scale), Math.max(0, height * scale));
     }
 
 }

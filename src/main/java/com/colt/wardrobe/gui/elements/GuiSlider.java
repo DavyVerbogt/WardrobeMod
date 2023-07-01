@@ -3,7 +3,6 @@ package com.colt.wardrobe.gui.elements;
 import com.mojang.blaze3d.vertex.PoseStack;
 import se.mickelus.mutil.gui.*;
 
-
 import java.util.function.Consumer;
 
 public class GuiSlider extends GuiElement {
@@ -35,7 +34,7 @@ public class GuiSlider extends GuiElement {
         this.onChange = onChange;
     }
 
-    public GuiSlider(int x, int y, int width, int valueSteps,boolean CanGoNegative, Consumer<Integer> onChange) {
+    public GuiSlider(int x, int y, int width, int valueSteps, boolean CanGoNegative, Consumer<Integer> onChange) {
         super(x, y, width, 6);
 
         addChild(new GuiRect(0, 1, width, 4, 0xffffff).setOpacity(0.3f));
@@ -47,7 +46,7 @@ public class GuiSlider extends GuiElement {
         currentIndicator = new GuiRect(0, 1, 4, 4, 0xffffff);
         addChild(currentIndicator);
 
-        currentIndicator.setX(width/2);
+        currentIndicator.setX(width / 2);
 
         this.valueSteps = valueSteps;
         this.indicatorMax = width - 4;
@@ -55,7 +54,6 @@ public class GuiSlider extends GuiElement {
 
         this.onChange = onChange;
     }
-
 
     public void setValue(int value) {
         this.value = value;
@@ -78,7 +76,8 @@ public class GuiSlider extends GuiElement {
 
     protected int calculateSegment(int refX, int mouseX) {
         if (CanGoNegative) {
-            return Math.round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
+            return Math
+                    .round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
         }
         return Math.round((valueSteps - 1) * Math.min(Math.max((mouseX - refX - x - 1) / (1f * indicatorMax), 0), 1));
     }
@@ -94,7 +93,8 @@ public class GuiSlider extends GuiElement {
     }
 
     @Override
-    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX,
+            int mouseY, float opacity) {
         if (isDragging) {
             int newSegment = calculateSegment(refX, mouseX);
             if (newSegment != value) {
