@@ -1,14 +1,15 @@
 package com.colt.wardrobe.gui.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import se.mickelus.mutil.gui.*;
+import se.mickelus.mutil.gui.GuiElement;
+import se.mickelus.mutil.gui.GuiRect;
 
 import java.util.function.Consumer;
 
 public class GuiSlider extends GuiElement {
 
     private final int valueSteps;
-    private int indicatorMax;
+    private final int indicatorMax;
     private final Consumer<Integer> onChange;
     public final GuiElement currentIndicator;
     private final GuiElement hoverIndicator;
@@ -94,7 +95,7 @@ public class GuiSlider extends GuiElement {
 
     @Override
     public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX,
-            int mouseY, float opacity) {
+                     int mouseY, float opacity) {
         if (isDragging) {
             int newSegment = calculateSegment(refX, mouseX);
             if (newSegment != value) {

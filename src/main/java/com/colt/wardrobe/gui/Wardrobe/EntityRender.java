@@ -1,8 +1,5 @@
 package com.colt.wardrobe.gui.Wardrobe;
 
-import org.lwjgl.opengl.GL11;
-
-import com.colt.wardrobe.Wardrobe;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,30 +8,28 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-
 import net.minecraft.world.entity.LivingEntity;
-
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL11;
 
 @OnlyIn(Dist.CLIENT)
 public class EntityRender {
 
     public static void renderEntityInInventory(int entityPosLeft, int entityPosTop, int size, int rotatePlayer,
-            float MouseLookX, float MouseLookY, LivingEntity Player) {
-        float f = (float) Math.atan((double) (MouseLookX / 40.0F));
-        float f1 = (float) Math.atan((double) (MouseLookY / 40.0F));
+                                               float MouseLookX, float MouseLookY, LivingEntity Player) {
+        float f = (float) Math.atan(MouseLookX / 40.0F);
+        float f1 = (float) Math.atan(MouseLookY / 40.0F);
         renderEntityInInventoryRaw(entityPosLeft, entityPosTop, size, rotatePlayer, f, f1, Player);
     }
 
     public static void renderEntityInInventoryRaw(int entityPosLeft, int entityPosTop, int size, int rotatePlayer,
-            float angleXComponent, float angleYComponent, LivingEntity Player) {
+                                                  float angleXComponent, float angleYComponent, LivingEntity Player) {
         float f = angleXComponent;
         float f1 = angleYComponent;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate((double) entityPosLeft, (double) entityPosTop, 1050.0D);
+        posestack.translate(entityPosLeft, entityPosTop, 1050.0D);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         PoseStack posestack1 = new PoseStack();

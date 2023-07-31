@@ -1,51 +1,48 @@
 package com.colt.wardrobe.gui.elements;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
+import com.colt.wardrobe.client.render.layers.MenuHatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.Sound;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraftforge.common.SoundAction;
-import se.mickelus.mutil.gui.GuiAlignment;
-import se.mickelus.mutil.gui.GuiAttachment;
+import org.lwjgl.opengl.GL11;
 import se.mickelus.mutil.gui.GuiClickable;
-import se.mickelus.mutil.gui.GuiElement;
-import se.mickelus.mutil.gui.GuiRect;
+import se.mickelus.mutil.gui.GuiText;
 import se.mickelus.mutil.gui.GuiTexture;
 
 public class ModelButton extends GuiClickable {
 
     public final GuiTexture Background;
+    private final GuiText ModelType;
+    private final String Model;
+    private final int LayerAmount;
+    private final boolean IsColorible;
     private boolean Enabled = false;
     private int rotate = 20;
 
-    public ModelButton(int x, int y, int width, int height, Runnable onClickHandler) {
+    public ModelButton(int x, int y, int width, int height, String modelType,int LayerAmount,boolean IsColorible, Runnable onClickHandler) {
         super(x, y, width, height, onClickHandler);
-
+        this.Model = modelType;
+        this.LayerAmount = LayerAmount;
+        this.IsColorible = IsColorible;
         Background = (GuiTexture) new GuiTexture(0, 0, width, height, GuiTextures.ModelButtonBackground).setOpacity(1f);
+        ModelType = new GuiText(0, 90, width, modelType.replace("coltwardrobe:", ""));
 
         Background.setTextureCoordinates(0, 0);
 
+
         addChild(Background);
+        addChild(ModelType);
     }
 
 
     @Override
     public boolean onMouseClick(int x, int y, int button) {
-        if (hasFocus)
-        {
-            Enabled=true;
+        if (hasFocus) {
+            Enabled = true;
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             updateColor();
         }
@@ -55,9 +52,8 @@ public class ModelButton extends GuiClickable {
 
     @Override
     public void onMouseRelease(int x, int y, int button) {
-        if (hasFocus)
-        {
-            Enabled=false;
+        if (hasFocus) {
+            Enabled = false;
             updateColor();
         }
         super.onMouseRelease(x, y, button);
@@ -86,8 +82,12 @@ public class ModelButton extends GuiClickable {
 
     @Override
     public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX,
-            int mouseY, float opacity) {
+                     int mouseY, float opacity) {
 
+        MenuHatLayer.ModelName = Model;
+        MenuHatLayer.Layers = LayerAmount;
+        MenuHatLayer.IsColorible = IsColorible;
+        MenuHatLayer.RenderYessPlease = true;
         ArmorStand INVStand = new ArmorStand(EntityType.ARMOR_STAND, Minecraft.getInstance().level);
 
         if (rotate == 360) {
@@ -100,8 +100,8 @@ public class ModelButton extends GuiClickable {
         }
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        EntityRender.scissor(refX+x, refY+y-1, width, height);
-        EntityRender.renderEntityInInventory((refX+40)+x, (refY)+y*3, 50, rotate,
+        EntityRender.scissor(refX + x, refY + y - 1, width, height);
+        EntityRender.renderEntityInInventory((refX + 40) + x, (refY) + y * 3, 50, rotate,
                 0,
                 0,
                 INVStand);

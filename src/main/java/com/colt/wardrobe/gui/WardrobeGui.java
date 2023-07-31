@@ -1,26 +1,26 @@
 package com.colt.wardrobe.gui;
 
-import com.colt.wardrobe.client.render.layers.TwoLayerColoribleHatLayer;
+import com.colt.wardrobe.Wardrobe;
+import com.colt.wardrobe.client.render.layers.HatLayer;
 import com.colt.wardrobe.gui.Wardrobe.EntityRender;
 import com.colt.wardrobe.gui.Wardrobe.HeaderGui;
 import com.colt.wardrobe.gui.elements.GuiColorChooser;
 import com.colt.wardrobe.gui.elements.GuiSlider;
 import com.colt.wardrobe.gui.elements.ModelButton;
+import com.colt.wardrobe.managers.HatManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lain.mods.cos.impl.ModObjects;
 import lain.mods.cos.impl.client.PlayerRenderHandler;
 import lain.mods.cos.impl.inventory.InventoryCosArmor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import se.mickelus.mutil.gui.GuiButton;
 import se.mickelus.mutil.gui.GuiElement;
 
 import java.awt.*;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class WardrobeGui extends Screen {
@@ -37,9 +37,9 @@ public class WardrobeGui extends Screen {
     private final GuiButton ToggleChestArmor;
     private final GuiButton ToggleLegArmor;
     private final GuiButton ToggleBootArmor;
-    private final GuiButton ToggleTopHat;
     private final GuiSlider RotateSlider;
     private int RotatePlayer = 0;
+    private int ModelButtonoffset = 0;
 
     protected WardrobeGui() {
         super(Component.translatable("wardrobe:wardrobegui"));
@@ -66,22 +66,29 @@ public class WardrobeGui extends Screen {
         ToggleChestArmor = new GuiButton(0, 30, "Toggle Chestplate", () -> ToggleArmor(2));
         ToggleLegArmor = new GuiButton(0, 40, "Toggle Leggings", () -> ToggleArmor(1));
         ToggleBootArmor = new GuiButton(0, 50, "Toggle Boots", () -> ToggleArmor(0));
-        ToggleTopHat = new GuiButton(0, 60, "Toggle Top Hat", () -> ToggleCustomArmor());
 
         defaultGui.addChild(ToggleCAR);
         defaultGui.addChild(ToggleHeadArmor);
         defaultGui.addChild(ToggleChestArmor);
         defaultGui.addChild(ToggleLegArmor);
         defaultGui.addChild(ToggleBootArmor);
-        defaultGui.addChild(ToggleTopHat);
-        defaultGui.addChild(new ModelButton(0, 70, 80, 80, () -> ToggleCustomArmor()));
-        defaultGui.addChild(new ModelButton(110, 70, 80, 80, () -> ToggleCustomArmor()));
+
+
+        HatManager.instance().getRegisteredHats().forEach(hat -> {
+
+            defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible(),
+                    () -> ToggleCustomArmor(hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible())));
+Wardrobe.LOGGER.info("Wardrobe Model Offset: " + ModelButtonoffset);
+            ModelButtonoffset+=110;
+        });
+
         defaultGui.addChild(new GuiColorChooser(-300, -50, 255, Color.BLACK.hashCode(),
-                val -> TwoLayerColoribleHatLayer.Layer1Color = val));
+                val -> HatLayer.Layer0Color = val));
 
         RotateSlider = new GuiSlider(430, 280, 100, 360, true, val -> RotatePlayer = -180 + val);
         defaultGui.addChild(RotateSlider);
     }
+
 
     @Override
     public void render(PoseStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
@@ -117,8 +124,14 @@ public class WardrobeGui extends Screen {
         inv.setSkinArmor(slot, !inv.isSkinArmor(slot));
     }
 
-    private void ToggleCustomArmor() {
-        TwoLayerColoribleHatLayer.TurnTophatOn = !TwoLayerColoribleHatLayer.TurnTophatOn;
+    private void ToggleCustomArmor(String id, int LayerAmount, boolean IsColorible) {
+        if (Objects.equals(id, HatLayer.ModelName)) {
+            HatLayer.TurnTophatOn = !HatLayer.TurnTophatOn;
+        }
+        HatLayer.ModelName = id;
+        HatLayer.Layers = LayerAmount;
+        HatLayer.IsColorible = IsColorible;
+
     }
 
     @Override
@@ -138,7 +151,7 @@ public class WardrobeGui extends Screen {
          * RotatePlayer += 5;
          * if (distance < 0)
          * RotatePlayer -= 5;
-         * 
+         *
          * return true;
          * }
          */

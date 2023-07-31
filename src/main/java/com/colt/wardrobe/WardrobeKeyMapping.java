@@ -6,7 +6,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
 
-public class WardrobeKeyMapping{
+public class WardrobeKeyMapping {
 
     public static final KeyMapping KeyWardrobe = new KeyMapping(
             "key.coltwardrobe.open_wardrobe",

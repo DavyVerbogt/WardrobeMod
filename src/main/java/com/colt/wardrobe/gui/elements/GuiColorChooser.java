@@ -8,10 +8,7 @@ import se.mickelus.mutil.gui.GuiRect;
 import se.mickelus.mutil.gui.GuiTexture;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.function.Consumer;
-
-import static net.minecraft.util.Mth.clamp;
 
 public class GuiColorChooser extends GuiElement {
     public static final ResourceLocation ColorPickBaground = new ResourceLocation(Wardrobe.MOD_ID,
@@ -19,10 +16,10 @@ public class GuiColorChooser extends GuiElement {
     public static final ResourceLocation LumSliderBackground = new ResourceLocation(Wardrobe.MOD_ID,
             "textures/gui/slider.png");
     private static final int H = 0, S = 1, B = 2;
-    private float[] hsb;
+    private final float[] hsb;
     private int rgb;
     private final int valueSteps;
-    private int indicatorMax;
+    private final int indicatorMax;
     private final Consumer<Integer> onChange;
     public final GuiElement Picker;
     public GuiElement LumSlider;
@@ -144,7 +141,7 @@ public class GuiColorChooser extends GuiElement {
 
     @Override
     public void draw(PoseStack matrixStack, int refX, int refY, int screenWidth, int screenHeight, int mouseX,
-            int mouseY, float opacity) {
+                     int mouseY, float opacity) {
         int BackgroundColorOnly = Color.HSBtoRGB(hsb[H], hsb[S], 1.0f);
         int BackgroundBrightness = Color.HSBtoRGB(0.0f, 0.0f, hsb[B]);
 

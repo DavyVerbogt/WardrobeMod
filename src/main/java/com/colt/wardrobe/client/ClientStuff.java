@@ -5,16 +5,19 @@ import com.colt.wardrobe.WardrobeKeyMapping;
 import com.colt.wardrobe.client.render.layers.Data;
 import com.colt.wardrobe.client.render.layers.LayersOptions;
 import com.colt.wardrobe.client.render.layers.MenuHatLayer;
-import com.colt.wardrobe.client.render.layers.TwoLayerColoribleHatLayer;
-import com.colt.wardrobe.client.render.models.TopHatModel;
-
-import net.minecraft.client.model.ArmorStandModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
+import com.colt.wardrobe.client.render.layers.HatLayer;
+import com.colt.wardrobe.client.render.models.ModelInstences;
+import com.colt.wardrobe.client.render.models.hats.ArrowModel;
+import com.colt.wardrobe.client.render.models.hats.BaseHatModel;
+import com.colt.wardrobe.client.render.models.hats.TopHatModel;
+import com.colt.wardrobe.client.render.models.hats.TopTopTophatModel;
+import com.colt.wardrobe.managers.HatManager;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.ArmorStandRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -30,6 +33,9 @@ public class ClientStuff {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent SetupEvent) {
+        HatManager.instance().getRegisteredHats().forEach(hat -> {
+            HatLayer.registerModel(hat.getId(), () -> (BaseHatModel) hat.getModelSupplier().get());
+        });
         MinecraftForge.EVENT_BUS.register(new InputListener());
 
     }
@@ -43,22 +49,26 @@ public class ClientStuff {
 
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(TopHatModel.LAYER_LOCATION, () -> TopHatModel.createLayer());
+        event.registerLayerDefinition(TopTopTophatModel.LAYER_LOCATION, () -> TopTopTophatModel.createLayer());
+        event.registerLayerDefinition(ArrowModel.LAYER_LOCATION, () -> ArrowModel.createLayer());
     }
 
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        EntityModelSet models = event.getEntityModels();
+        addHatLayer(event.getSkin("default"));
+        addHatLayer(event.getSkin("slim"));
 
-        for (String skin : event.getSkins()) {
-            LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> player = event.getSkin(skin);
-
-            if (player != null) {
-                player.addLayer(new TwoLayerColoribleHatLayer<>(player, models));
-            }
+        EntityRenderer<?> renderer = event.getRenderer(EntityType.ARMOR_STAND);
+        if (renderer instanceof ArmorStandRenderer armorStandRenderer) {
+            armorStandRenderer.addLayer(new MenuHatLayer<>(armorStandRenderer));
         }
 
-        LivingEntityRenderer<ArmorStand, ArmorStandModel> armorStand = event.getRenderer(EntityType.ARMOR_STAND);
+        ModelInstences.get().LoadModels(event.getEntityModels());
+    }
 
-        armorStand.addLayer(new MenuHatLayer(armorStand, models));
+    private static void addHatLayer(LivingEntityRenderer<?, ?> renderer) {
+        if (renderer instanceof PlayerRenderer playerRenderer) {
+            playerRenderer.addLayer(new HatLayer<>(playerRenderer));
+        }
     }
 
     @SubscribeEvent

@@ -1,7 +1,6 @@
 package com.colt.wardrobe.gui.Wardrobe;
 
 import se.mickelus.mutil.gui.GuiElement;
-import se.mickelus.mutil.gui.GuiText;
 
 public class HeaderGui extends GuiElement {
 
