@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class ArrowModel extends BaseHatModel{
+public class ArrowModel extends BaseHatModel {
 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
             new ResourceLocation(Wardrobe.MOD_ID, "arrow"), "main");

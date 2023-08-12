@@ -12,7 +12,7 @@ public class Arrow extends Hat {
     public static final ResourceLocation ID = new ResourceLocation(Wardrobe.MOD_ID, "arrow");
 
     public Arrow() {
-        super(ID,1,false);
+        super(ID, 1, false);
     }
 
     @Override

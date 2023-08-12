@@ -12,7 +12,7 @@ public class TopTopTopHat extends Hat {
     public static final ResourceLocation ID = new ResourceLocation(Wardrobe.MOD_ID, "toptoptophat");
 
     public TopTopTopHat() {
-        super(ID,6,true);
+        super(ID, 6, true);
     }
 
     @Override

@@ -78,8 +78,8 @@ public class WardrobeGui extends Screen {
 
             defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible(),
                     () -> ToggleCustomArmor(hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible())));
-Wardrobe.LOGGER.info("Wardrobe Model Offset: " + ModelButtonoffset);
-            ModelButtonoffset+=110;
+            Wardrobe.LOGGER.info("Wardrobe Model Offset: " + ModelButtonoffset);
+            ModelButtonoffset += 110;
         });
 
         defaultGui.addChild(new GuiColorChooser(-300, -50, 255, Color.BLACK.hashCode(),

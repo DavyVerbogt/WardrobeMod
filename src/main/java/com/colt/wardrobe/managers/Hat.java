@@ -7,13 +7,12 @@ import java.util.function.Supplier;
 public abstract class Hat {
 
     private final ResourceLocation id;
-    private int LayerAmount;
-    private boolean IsColorible;
+    private final int LayerAmount;
+    private final boolean IsColorible;
 
-    public Hat(ResourceLocation id, int AmountOfLayers, boolean IsColorible)
-    {
+    public Hat(ResourceLocation id, int AmountOfLayers, boolean IsColorible) {
         this.id = id;
-        this. LayerAmount = AmountOfLayers;
+        this.LayerAmount = AmountOfLayers;
         this.IsColorible = IsColorible;
     }
 
@@ -21,9 +20,13 @@ public abstract class Hat {
         return this.id;
     }
 
-    public int GetAmmountOfLayers() {return this.LayerAmount;}
+    public int GetAmmountOfLayers() {
+        return this.LayerAmount;
+    }
 
-    public boolean getColorible() {return this.IsColorible;}
+    public boolean getColorible() {
+        return this.IsColorible;
+    }
 
     public abstract Supplier<Object> getModelSupplier();
 

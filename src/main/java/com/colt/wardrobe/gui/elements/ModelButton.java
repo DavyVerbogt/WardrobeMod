@@ -23,7 +23,7 @@ public class ModelButton extends GuiClickable {
     private boolean Enabled = false;
     private int rotate = 20;
 
-    public ModelButton(int x, int y, int width, int height, String modelType,int LayerAmount,boolean IsColorible, Runnable onClickHandler) {
+    public ModelButton(int x, int y, int width, int height, String modelType, int LayerAmount, boolean IsColorible, Runnable onClickHandler) {
         super(x, y, width, height, onClickHandler);
         this.Model = modelType;
         this.LayerAmount = LayerAmount;

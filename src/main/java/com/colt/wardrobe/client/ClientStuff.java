@@ -3,9 +3,9 @@ package com.colt.wardrobe.client;
 import com.colt.wardrobe.InputListener;
 import com.colt.wardrobe.WardrobeKeyMapping;
 import com.colt.wardrobe.client.render.layers.Data;
+import com.colt.wardrobe.client.render.layers.HatLayer;
 import com.colt.wardrobe.client.render.layers.LayersOptions;
 import com.colt.wardrobe.client.render.layers.MenuHatLayer;
-import com.colt.wardrobe.client.render.layers.HatLayer;
 import com.colt.wardrobe.client.render.models.ModelInstences;
 import com.colt.wardrobe.client.render.models.hats.ArrowModel;
 import com.colt.wardrobe.client.render.models.hats.BaseHatModel;
@@ -59,7 +59,7 @@ public class ClientStuff {
 
         EntityRenderer<?> renderer = event.getRenderer(EntityType.ARMOR_STAND);
         if (renderer instanceof ArmorStandRenderer armorStandRenderer) {
-            armorStandRenderer.addLayer(new MenuHatLayer<>(armorStandRenderer));
+            armorStandRenderer.addLayer(new MenuHatLayer(armorStandRenderer));
         }
 
         ModelInstences.get().LoadModels(event.getEntityModels());
@@ -67,7 +67,7 @@ public class ClientStuff {
 
     private static void addHatLayer(LivingEntityRenderer<?, ?> renderer) {
         if (renderer instanceof PlayerRenderer playerRenderer) {
-            playerRenderer.addLayer(new HatLayer<>(playerRenderer));
+            playerRenderer.addLayer(new HatLayer(playerRenderer));
         }
     }
 
