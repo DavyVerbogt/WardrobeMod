@@ -3,6 +3,7 @@ package com.colt.wardrobe.client.render.layers;
 import com.colt.wardrobe.Wardrobe;
 import com.colt.wardrobe.client.render.models.ModelInstences;
 import com.colt.wardrobe.client.render.models.hats.BaseHatModel;
+import com.colt.wardrobe.managers.HatManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
@@ -33,28 +34,11 @@ public class WardrobeLayers<T extends LivingEntity, M extends HumanoidModel<T>> 
     public static boolean IsColorible;
     public static int LayerColor = Color.BLACK.hashCode();
 
-    public WardrobeLayers(RenderLayerParent<T, M> p_117346_)
-    {
+    public WardrobeLayers(RenderLayerParent<T, M> p_117346_) {
         super(p_117346_);
 
     }
 
-
-
-    protected ResourceLocation getTextureLocation(String layer) {
-        return switch (ModelName) {
-            case "coltwardrobe:tophat" -> new ResourceLocation(Wardrobe.MOD_ID,
-                    "textures/player/hats/tophat/top_hat" + layer + ".png");
-
-            case "coltwardrobe:toptoptophat" -> new ResourceLocation(Wardrobe.MOD_ID,
-                    "textures/player/hats/toptoptophat/top_hat" + layer + ".png");
-
-            case "coltwardrobe:arrow" -> new ResourceLocation(Wardrobe.MOD_ID,
-                    "textures/player/hats/arrow/arrow.png");
-
-            default -> null;
-        };
-    }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing,
@@ -63,50 +47,43 @@ public class WardrobeLayers<T extends LivingEntity, M extends HumanoidModel<T>> 
     }
 
     public void LayerRenderer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity,
-                              float partialTick,  String ModelName, int Layers, boolean IsColorible, int LayerCol, boolean IsMenu) {
-
-        this.ModelName = ModelName;
-        this.Layers = Layers;
-        this.IsColorible = IsColorible;
-        this.LayerColor = LayerCol;
-        this.IsMenu = IsMenu;
+                              float partialTick, String ModelName, int Layers, boolean IsColorible, int LayerCol, boolean IsMenu) {
+        WardrobeLayers.ModelName = ModelName;
+        WardrobeLayers.Layers = Layers;
+        WardrobeLayers.IsColorible = IsColorible;
+        LayerColor = LayerCol;
+        WardrobeLayers.IsMenu = IsMenu;
 
         BaseHatModel model = VARIANTS.getOrDefault(ModelName, DEFAULT_SUPPLIER).get();
         if (model == null)
             return;
 
-if (!IsMenu)
-{
-    
-    getParentModel().getHead().translateAndRotate(poseStack);
-    model.setupAnimation((Player) entity, entity.tickCount, partialTick);
-}
-
+        //See if it is for the menu or the player
+        if (!IsMenu) {
+            getParentModel().getHead().translateAndRotate(poseStack);
+            // Setup Animation
+            model.setupAnimation((Player) entity, entity.tickCount, partialTick);
+        }
         poseStack.scale(1.01f, 1.01f, 1.01f);
 
-        // Setup Animation
-
+        //Loops Per Layer through The render function and the Color
         for (int i = 0; i < Layers; i++) {
-            int ColorBackup = LayerColor;
-            if (!IsColorible) {
-                LayerColor = Color.WHITE.hashCode();
-            } else {
-                LayerColor = ColorBackup;
-            }
+            LayerColor = GetLayerColor(ModelName,i);
             float r = (float) (LayerColor >> 16 & 255) / 255.0F;
             float g = (float) (LayerColor >> 8 & 255) / 255.0F;
             float b = (float) (LayerColor & 255) / 255.0F;
 
             float alpha = 1F;
-            renderModelPerLayer(poseStack, buffer, packedLight, false, model, r, g, b, alpha, (i < 1 ? "_layer_" + i : ""));
+            renderModelPerLayer(poseStack, buffer, packedLight, false, model, r, g, b, alpha, (i == 0 ? "" : "_layer_" + i), ModelName);
         }
     }
 
     private void renderModelPerLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, boolean glint,
                                      BaseHatModel model, float r, float g, float b, Float aplha,
-                                     @Nullable String textureLayer) {
+                                     @Nullable String textureLayer, String ModelName) {
+        Wardrobe.LOGGER.info(Wardrobe.MOD_ID+ " "+ textureLayer);
         renderModel(poseStack, buffer, packedLight, glint, model, r, g, b, aplha,
-                this.getTextureLocation(textureLayer));
+                getTextureLocation(ModelName,textureLayer));
     }
 
     private void renderModel(PoseStack poseStack, MultiBufferSource buffer, int packedLight, boolean glint,
@@ -119,7 +96,13 @@ if (!IsMenu)
 
         model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, alpha);
     }
+    public static int GetLayerColor(String Model, int Layer) {
+        return HatManager.instance().GetHat(ResourceLocation.tryParse(Model)).GetColorForLayer(Layer);
+    }
 
+    public static ResourceLocation getTextureLocation(String Model, String Layer) {
+        return HatManager.instance().GetHat(ResourceLocation.tryParse(Model)).GetTexture(Layer);
+    }
     public synchronized static void registerModel(ResourceLocation id, Supplier<BaseHatModel> model) {
         VARIANTS.putIfAbsent(id.toString(), model);
     }

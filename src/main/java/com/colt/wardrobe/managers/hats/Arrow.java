@@ -16,7 +16,13 @@ public class Arrow extends Hat {
     }
 
     @Override
-    public Supplier<Object> getModelSupplier() {
+    public Supplier<Object> GetModelSupplier() {
         return ModelInstences.get()::getArrow;
+    }
+
+    @Override
+    public  ResourceLocation GetTexture(String Layer){
+        return new ResourceLocation(Wardrobe.MOD_ID,
+                "textures/player/hats/arrow/arrow.png");
     }
 }

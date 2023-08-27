@@ -34,7 +34,7 @@ public class ClientStuff {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent SetupEvent) {
         HatManager.instance().getRegisteredHats().forEach(hat -> {
-            HatLayer.registerModel(hat.getId(), () -> (BaseHatModel) hat.getModelSupplier().get());
+            HatLayer.registerModel(hat.GetId(), () -> (BaseHatModel) hat.GetModelSupplier().get());
         });
         MinecraftForge.EVENT_BUS.register(new InputListener());
 

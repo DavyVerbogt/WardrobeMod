@@ -27,4 +27,5 @@ public class MenuHatLayer extends WardrobeLayers {
             LayerRenderer(poseStack, buffer, packedLight, entity, partialTick,ModelName,Layers,IsColorible,LayerColor,true);
         }
     }
+
 }

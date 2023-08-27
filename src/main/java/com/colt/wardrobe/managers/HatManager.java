@@ -29,14 +29,14 @@ public class HatManager {
     }
 
     public synchronized void register(Hat hat) {
-        this.registerdHats.putIfAbsent(hat.getId(), hat);
+        this.registerdHats.putIfAbsent(hat.GetId(), hat);
     }
 
     public List<Hat> getRegisteredHats() {
         return List.copyOf(this.registerdHats.values());
     }
 
-    public Hat getHat(ResourceLocation id) {
+    public Hat GetHat(ResourceLocation id) {
         return this.registerdHats.get(id);
     }
 }

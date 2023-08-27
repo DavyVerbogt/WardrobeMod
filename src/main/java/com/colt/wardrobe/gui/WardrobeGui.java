@@ -76,8 +76,8 @@ public class WardrobeGui extends Screen {
 
         HatManager.instance().getRegisteredHats().forEach(hat -> {
 
-            defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible(),
-                    () -> ToggleCustomArmor(hat.getId().toString(), hat.GetAmmountOfLayers(), hat.getColorible())));
+            defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible(),
+                    () -> ToggleCustomArmor(hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible())));
             Wardrobe.LOGGER.info("Wardrobe Model Offset: " + ModelButtonoffset);
             ModelButtonoffset += 110;
         });

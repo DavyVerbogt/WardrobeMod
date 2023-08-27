@@ -2,6 +2,7 @@ package com.colt.wardrobe.managers;
 
 import net.minecraft.resources.ResourceLocation;
 
+import java.awt.*;
 import java.util.function.Supplier;
 
 public abstract class Hat {
@@ -16,7 +17,7 @@ public abstract class Hat {
         this.IsColorible = IsColorible;
     }
 
-    public ResourceLocation getId() {
+    public ResourceLocation GetId() {
         return this.id;
     }
 
@@ -24,10 +25,14 @@ public abstract class Hat {
         return this.LayerAmount;
     }
 
-    public boolean getColorible() {
+    public boolean GetColorible() {
         return this.IsColorible;
     }
 
-    public abstract Supplier<Object> getModelSupplier();
+    public abstract Supplier<Object> GetModelSupplier();
+
+    public  int GetColorForLayer(int Layer){return Color.WHITE.hashCode();}
+
+    public  ResourceLocation GetTexture(String Layer){return null;}
 
 }
