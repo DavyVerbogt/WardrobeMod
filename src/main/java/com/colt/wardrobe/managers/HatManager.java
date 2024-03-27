@@ -1,6 +1,7 @@
 package com.colt.wardrobe.managers;
 
 import com.colt.wardrobe.managers.hats.Arrow;
+import com.colt.wardrobe.managers.hats.BaseballCap;
 import com.colt.wardrobe.managers.hats.TopHat;
 import com.colt.wardrobe.managers.hats.TopTopTopHat;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +27,7 @@ public class HatManager {
         this.register(new TopHat());
         this.register(new TopTopTopHat());
         this.register(new Arrow());
+        this.register(new BaseballCap());
     }
 
     public synchronized void register(Hat hat) {
@@ -39,4 +41,5 @@ public class HatManager {
     public Hat GetHat(ResourceLocation id) {
         return this.registerdHats.get(id);
     }
+
 }

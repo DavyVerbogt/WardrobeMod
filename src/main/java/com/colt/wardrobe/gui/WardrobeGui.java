@@ -40,6 +40,8 @@ public class WardrobeGui extends Screen {
     private final GuiSlider RotateSlider;
     private int RotatePlayer = 0;
     private int ModelButtonoffset = 0;
+    private int DecalOffsetX = 70;
+    private int DecalOffsetY = 0;
 
     protected WardrobeGui() {
         super(Component.translatable("wardrobe:wardrobegui"));
@@ -74,14 +76,26 @@ public class WardrobeGui extends Screen {
         defaultGui.addChild(ToggleBootArmor);
 
 
-        HatManager.instance().getRegisteredHats().forEach(hat -> {
+            HatManager.instance().getRegisteredHats().forEach(hat -> {
 
-            defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible(),
-                    () -> ToggleCustomArmor(hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible())));
+            defaultGui.addChild(new ModelButton(ModelButtonoffset, 70, 80, 80, hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible(),hat.GetDecalOption(), hat.GetDecalName(),
+                    () -> ToggleCustomArmor(hat.GetId().toString(), hat.GetAmmountOfLayers(), hat.GetColorible(),hat.GetDecalOption(), hat.GetDecalName())));
             Wardrobe.LOGGER.info("Wardrobe Model Offset: " + ModelButtonoffset);
             ModelButtonoffset += 110;
         });
-
+/*
+        DecalRegistry.instance().GetAll16x16Decal().forEach(decal -> {
+            defaultGui.addChild(new GuiTexture(DecalOffsetX, DecalOffsetY, 64, 64, DecalRegistry.instance().GetSingle16x16Decal(decal)));
+            if (DecalOffsetX >= 280) {
+                DecalOffsetY += 70;
+                DecalOffsetX = 70;
+            }
+            else
+            {
+                DecalOffsetX += 70;
+            }
+        });
+*/
         defaultGui.addChild(new GuiColorChooser(-300, -50, 255, Color.BLACK.hashCode(),
                 val -> HatLayer.Layer0Color = val));
 
@@ -124,13 +138,15 @@ public class WardrobeGui extends Screen {
         inv.setSkinArmor(slot, !inv.isSkinArmor(slot));
     }
 
-    private void ToggleCustomArmor(String id, int LayerAmount, boolean IsColorible) {
+    private void ToggleCustomArmor(String id, int LayerAmount, boolean IsColorible,boolean SelectibleDecal, String DecalName) {
         if (Objects.equals(id, HatLayer.ModelName)) {
             HatLayer.TurnTophatOn = !HatLayer.TurnTophatOn;
         }
         HatLayer.ModelName = id;
         HatLayer.Layers = LayerAmount;
         HatLayer.IsColorible = IsColorible;
+        HatLayer.SelectibleDecal = SelectibleDecal;
+        HatLayer.DecalName = DecalName;
 
     }
 

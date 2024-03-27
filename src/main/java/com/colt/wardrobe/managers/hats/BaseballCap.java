@@ -8,25 +8,25 @@ import net.minecraft.resources.ResourceLocation;
 import java.awt.*;
 import java.util.function.Supplier;
 
-public class TopHat extends Hat {
+public class BaseballCap extends Hat {
 
-    public static final ResourceLocation ID = new ResourceLocation(Wardrobe.MOD_ID, "tophat");
+    public static final ResourceLocation ID = new ResourceLocation(Wardrobe.MOD_ID, "baseballcap");
 
-    public TopHat() {
-        super(ID, 2, true,false,null);
+    public BaseballCap() {
+        super(ID, 2, true,true, "iron_ingot");
     }
 
     @Override
     public Supplier<Object> GetModelSupplier() {
-        return ModelInstences.get()::getTopHat;
+        return ModelInstences.get()::getBaseballCap;
     }
-@Override
+    @Override
     public int GetColorForLayer(int Layer){
-    return Layer == 1 ?  Color.WHITE.hashCode() :  Color.BLACK.hashCode();
+        return Layer == 1 ?  Color.red.hashCode() :  Color.WHITE.hashCode();
     }
     @Override
     public  ResourceLocation GetTexture(String Layer){
         return new ResourceLocation(Wardrobe.MOD_ID,
-                "textures/player/hats/tophat/top_hat" + Layer + ".png");
+                "textures/player/hats/baseballcap/baseball_cap.png");
     }
 }

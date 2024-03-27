@@ -13,6 +13,8 @@ public class MenuHatLayer extends WardrobeLayers {
     public static int Layers;
     public static boolean IsColorible;
     public static boolean RenderYessPlease = false;
+    public static boolean SelectibleDecal;
+    public static String DecalName;
 
     public static int Layer0Color = Color.BLACK.hashCode();
 
@@ -24,7 +26,7 @@ public class MenuHatLayer extends WardrobeLayers {
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
         LayerColor = Layer0Color;
         if (RenderYessPlease) {
-            LayerRenderer(poseStack, buffer, packedLight, entity, partialTick,ModelName,Layers,IsColorible,LayerColor,true);
+            LayerRenderer(poseStack, buffer, packedLight, entity, partialTick,ModelName,Layers,IsColorible, SelectibleDecal,LayerColor,DecalName,true);
         }
     }
 

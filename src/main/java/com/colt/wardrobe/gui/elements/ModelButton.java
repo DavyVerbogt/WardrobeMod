@@ -20,14 +20,20 @@ public class ModelButton extends GuiClickable {
     private final String Model;
     private final int LayerAmount;
     private final boolean IsColorible;
+    private final boolean SelectibleDecal;
+    private final String DecalName;
+
     private boolean Enabled = false;
     private int rotate = 20;
 
-    public ModelButton(int x, int y, int width, int height, String modelType, int LayerAmount, boolean IsColorible, Runnable onClickHandler) {
+    public ModelButton(int x, int y, int width, int height, String modelType, int LayerAmount, boolean IsColorible, boolean SelectibleDecal, String DecalName, Runnable onClickHandler) {
         super(x, y, width, height, onClickHandler);
         this.Model = modelType;
         this.LayerAmount = LayerAmount;
         this.IsColorible = IsColorible;
+        this.SelectibleDecal = SelectibleDecal;
+        this.DecalName = DecalName;
+
         Background = (GuiTexture) new GuiTexture(0, 0, width, height, GuiTextures.ModelButtonBackground).setOpacity(1f);
         ModelType = new GuiText(0, 90, width, modelType.replace("coltwardrobe:", ""));
 
@@ -88,6 +94,9 @@ public class ModelButton extends GuiClickable {
         MenuHatLayer.Layers = LayerAmount;
         MenuHatLayer.IsColorible = IsColorible;
         MenuHatLayer.RenderYessPlease = true;
+        MenuHatLayer.SelectibleDecal = SelectibleDecal;
+        MenuHatLayer.DecalName = DecalName;
+
         ArmorStand INVStand = new ArmorStand(EntityType.ARMOR_STAND, Minecraft.getInstance().level);
 
         if (rotate == 360) {

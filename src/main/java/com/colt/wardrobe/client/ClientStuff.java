@@ -7,10 +7,7 @@ import com.colt.wardrobe.client.render.layers.HatLayer;
 import com.colt.wardrobe.client.render.layers.LayersOptions;
 import com.colt.wardrobe.client.render.layers.MenuHatLayer;
 import com.colt.wardrobe.client.render.models.ModelInstences;
-import com.colt.wardrobe.client.render.models.hats.ArrowModel;
-import com.colt.wardrobe.client.render.models.hats.BaseHatModel;
-import com.colt.wardrobe.client.render.models.hats.TopHatModel;
-import com.colt.wardrobe.client.render.models.hats.TopTopTophatModel;
+import com.colt.wardrobe.client.render.models.hats.*;
 import com.colt.wardrobe.managers.HatManager;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.ArmorStandRenderer;
@@ -51,6 +48,7 @@ public class ClientStuff {
         event.registerLayerDefinition(TopHatModel.LAYER_LOCATION, () -> TopHatModel.createLayer());
         event.registerLayerDefinition(TopTopTophatModel.LAYER_LOCATION, () -> TopTopTophatModel.createLayer());
         event.registerLayerDefinition(ArrowModel.LAYER_LOCATION, () -> ArrowModel.createLayer());
+        event.registerLayerDefinition(BaseballCapModel.LAYER_LOCATION, () -> BaseballCapModel.createLayer());
     }
 
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
